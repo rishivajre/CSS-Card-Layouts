@@ -5,279 +5,311 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-        body {
-            margin: 0;
-            min-height: 100vh;
-            font-family: 'Arial', sans-serif;
-            padding: 2rem;
-            line-height: 1.6;
-        }
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-        }
-        .card {
-            position: relative;
-            border-radius: 20px;
-            background: #151515;
-            padding: 3px;
-            cursor: pointer;
-            transition: transform 0.3s ease;
-            max-width: 100%;
-        }
-        .card:hover {
-            transform: translateY(-10px);
-        }
-        .card::before,
-        .card::after {
-            content: "";
-            position: absolute;
-            inset: -0.2rem;
-            z-index: -1;
-            background: conic-gradient(
-                from var(--gradient-angle),
-                #ff00ea,
-                #00f7ff,
-                #00ff00,
-                #00f7ff,
-                #ff00ea
-            );
-            border-radius: 25px;
-            animation: rotate 5s linear infinite;
-            opacity: 0;
-            transition: opacity 0.6s;
-        }
-        .card::after {
-            filter: blur(3rem);
-        }
-        .card:hover::before,
-        .card:hover::after {
-            opacity: 1;
-        }
-        @property --gradient-angle {
-            syntax: "<angle>";
-            initial-value: 0deg;
-            inherits: false;
-        }
-        @keyframes rotate {
-            0% { --gradient-angle: 0deg; }
-            100% { --gradient-angle: 360deg; }
-        }
-        .card-inner {
-            background: #151515;
-            border-radius: 18px;
-            overflow: hidden;
-            position: relative;
-            z-index: 1;
-        }
-        .card-gif {
-            width: 100%;
-            height: 400px;
-            object-fit: cover;
-            transition: transform 0.3s;
-        }
-        .card:hover .card-gif {
-            transform: scale(1.05);
-        }
-        .card-content {
-            padding: 1.5rem;
-            position: relative;
-        }
-        .card-title {
-            font-size: 1.5rem;
-            margin: 0 0 1rem;
-            background: linear-gradient(to right, #ff00ea, #00f7ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .card-description {
-            color: #888;
-            margin-bottom: 1.5rem;
-        }
-        .card-button {
-            display: inline-block;
-            padding: 0.8rem 1.5rem;
-            background: linear-gradient(45deg, #ff00ea, #00f7ff);
-            border-radius: 25px;
-            color: white;
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.3s;
-            position: relative;
-            overflow: hidden;
-            margin-top: 25px;
-        }
-        .card-button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 15px rgba(255,0,234,0.5);
-        }
-        .card-button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(
-                120deg, 
-                transparent, 
-                rgba(255,255,255,0.3), 
-                transparent
-            );
-            transition: all 0.6s;
-        }
-        .card-button:hover::before {
-            left: 100%;
-        }
-        
-        /* Popup Styles */
-        .popup {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0,0,0,0.9);
-            align-items: center;
-            justify-content: center;
-        }
-        .popup-content {
-            background: linear-gradient(45deg, #151515, #1f1f1f);
-            border: 3px solid transparent;
-            border-image: linear-gradient(45deg, #ff00ea, #00f7ff) 1;
-            border-radius: 20px;
-            max-width: 500px;
-            width: 90%;
-            padding: 2rem;
-            position: relative;
-            text-align: center;
-            transform: scale(0.7);
-            opacity: 0;
-            transition: all 0.3s ease;
-        }
-        .popup.show {
-            display: flex;
-        }
-        .popup.show .popup-content {
-            transform: scale(1);
-            opacity: 1;
-        }
-        .popup-close {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            color: #00f7ff;
-            font-size: 2rem;
-            cursor: pointer;
-            transition: color 0.3s;
-        }
-        .popup-close:hover {
-            color: #ff00ea;
-        }
-        
-        /* Premium Features */
-        .premium-badge {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: linear-gradient(45deg, #ff00ea, #00f7ff);
-            color: white;
-            padding: 5px 10px;
-            border-radius: 15px;
-            font-size: 0.8rem;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-        .card:hover .premium-badge {
-            opacity: 1;
-        }
-        .skill-progress {
-            width: 100%;
-            background: #222;
-            border-radius: 10px;
-            overflow: hidden;
-            margin-top: 10px;
-            position: relative;
-        }
-        .skill-progress-bar {
-            height: 5px;
-            background: linear-gradient(45deg, #ff00ea, #00f7ff);
-            width: 0;
-            animation: fillProgress 2s ease-out forwards;
-            
-        }
-        @keyframes fillProgress {
-            to { width: 75%; }
-        }
-        .rating {
-            display: flex;
-            align-items: center;
-            margin-top: 10px;
-        }
-        .rating-icon {
-            position: relative;
-            display: inline-block;
-            color: #222;
-        }
-        .rating-icon-fill {
-            position: absolute;
-            top: 0;
-            left: 0;
-            overflow: hidden;
-            color: #00f7ff;
-            animation: fillStars 2s ease-out forwards;
-        }
-        @keyframes fillStars {
-            to { width: 84%; }
-        }
-        .rating-text {
-            color: #888;
-            margin-left: 5px;
-        }
-        .card-info-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            background: rgba(0,0,0,0.7);
-            color: white;
-            padding: 5px 10px;
-            text-align: center;
-            font-size: 0.8rem;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-        .card:hover .card-info-overlay {
-            opacity: 1;
-        }
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: 'Arial', sans-serif;
+    padding: 0.2rem;
+    line-height: 1.6;
+}
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+}
+.card {
+    position: relative;
+    border-radius: 20px;
+    background: #151515;
+    padding: 3px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    max-width: 100%;
+}
+.card:hover {
+    transform: translateY(-10px);
+}
+.card::before,
+.card::after {
+    content: "";
+    position: absolute;
+    inset: -0.2rem;
+    z-index: -1;
+    background: conic-gradient(
+        from var(--gradient-angle),
+        #ff00ea,
+        #00f7ff,
+        #00ff00,
+        #00f7ff,
+        #ff00ea
+    );
+    border-radius: 25px;
+    animation: rotate 5s linear infinite;
+    opacity: 0;
+    transition: opacity 0.6s;
+}
+.card::after {
+    filter: blur(0.36rem);
+}
+.card:hover::before,
+.card:hover::after {
+    opacity: 1;
+}
+@property --gradient-angle {
+    syntax: "<angle>";
+    initial-value: 0deg;
+    inherits: false;
+}
+@keyframes rotate {
+    0% { --gradient-angle: 0deg; }
+    100% { --gradient-angle: 360deg; }
+}
+.card-inner {
+    background: #151515;
+    border-radius: 18px;
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+}
+.card-gif {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    transition: transform 0.3s;
+}
+.card:hover .card-gif {
+    transform: scale(1.05);
+}
+.card-content {
+    padding: 1.5rem;
+    position: relative;
+}
+.card-title {
+    font-size: 1.5rem;
+    margin: 0 0 1rem;
+    background: linear-gradient(to right, #ff00ea, #00f7ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.card-description {
+    color: #888;
+    margin-bottom: 1.5rem;
+}
+.card-button {
+    display: inline-block;
+    padding: 0.8rem 1.5rem;
+    background: linear-gradient(45deg, #ff00ea, #00f7ff);
+    border-radius: 25px;
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+    margin-top: 25px;
+}
+.card-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(255,0,234,0.5);
+}
+.card-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        120deg, 
+        transparent, 
+        rgba(255,255,255,0.3), 
+        transparent
+    );
+    transition: all 0.6s;
+}
+.card-button:hover::before {
+    left: 100%;
+}
 
-        /* Responsive Adjustments */
-        @media screen and (max-width: 768px) {
-            .container {
-                grid-template-columns: 1fr;
-                padding: 1rem;
-            }
-            .card-content {
-                padding: 1rem;
-            }
-            .card-title {
-                font-size: 1.2rem;
-            }
-            .popup-content {
-                width: 95%;
-                padding: 1rem;
-            }
-        }
+/* Popup Styles */
+.popup {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.9);
+    align-items: center;
+    justify-content: center;
+}
+.popup-content {
+    background: linear-gradient(45deg, #151515, #1f1f1f);
+    border: 3px solid transparent;
+    border-image: linear-gradient(45deg, #ff00ea, #00f7ff) 1;
+    border-radius: 20px;
+    max-width: 500px;
+    width: 90%;
+    padding: 2rem;
+    position: relative;
+    text-align: center;
+    transform: scale(0.7);
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+.popup.show {
+    display: flex;
+}
+.popup.show .popup-content {
+    transform: scale(1);
+    opacity: 1;
+}
+.popup-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: #00f7ff;
+    font-size: 2rem;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+.popup-close:hover {
+    color: #ff00ea;
+}
+
+/* Premium Features */
+.premium-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: linear-gradient(45deg, #ff00ea, #00f7ff);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+.card:hover .premium-badge {
+    opacity: 1;
+}
+.skill-progress {
+    width: 100%;
+    background: #222;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: 10px;
+    position: relative;
+    z-index: 2;
+}
+.skill-progress-bar {
+    height: 5px;
+    background: linear-gradient(45deg, #ff00ea, #00f7ff);
+    width: 0;
+    animation: fillProgress 2s ease-out forwards;
+}
+@keyframes fillProgress {
+    to { width: 75%; }
+}
+.rating {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+    position: relative;
+}
+.rating-icon {
+    position: relative;
+    display: inline-block;
+    color: #222;
+    font-size: 1.2rem;
+}
+.rating-icon-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    color: #00f7ff;
+    white-space: nowrap;
+}
+.rating-text {
+    color: #888;
+    margin-left: 5px;
+    font-size: 0.9rem;
+}
+.card-info-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0,0,0,0.7);
+    color: white;
+    padding: 5px 10px;
+    text-align: center;
+    font-size: 0.8rem;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+.card:hover .card-info-overlay {
+    opacity: 1;
+}
+
+/* Responsive Breakpoints */
+/* Extremely Small Screens */
+@media screen and (max-width: 320px) {
+    .container {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    .card-title {
+        font-size: 1rem;
+    }
+    .card-description {
+        font-size: 0.8rem;
+    }
+    .card-button {
+        padding: 0.5rem 1rem;
+        font-size: 0.8rem;
+    }
+    .card-gif {
+        height: 200px;
+    }
+}
+
+/* Small Screens */
+@media screen and (min-width: 321px) and (max-width: 576px) {
+    .container {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    .card-gif {
+        height: 350px;
+    }
+}
+
+/* Medium Screens */
+@media screen and (min-width: 577px) and (max-width: 992px) {
+    .container {
+        grid-template-columns: repeat(1, 1fr);
+        gap: 25px;
+    }
+}
+
+/* Large Screens */
+@media screen and (min-width: 993px) {
+    .container {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 30px;
+    }
+}
     </style>
 </head>
 <body>
@@ -288,8 +320,64 @@
                     Premium Features Unlocked
                 </div>
                 <img src="https://img95.lovepik.com/photo/40105/1581.gif_wh860.gif" alt="Utility 1" class="card-gif">
+                <div class="premium-badge">Premium</div>
                 <div class="card-content">
-                    <div class="premium-badge">Premium</div>
+                    
+                    <h2 class="card-title">Neon Style Utility</h2>
+                    <p class="card-description">Five word description goes here</p>
+                    <div class="rating">
+                        <div class="rating-icon">
+                            ★★★★★
+                            <div class="rating-icon-fill">
+                                ★★★★★
+                            </div>
+                        </div>
+                        <span class="rating-text">(4.2)</span>
+                    </div>
+                    <div class="skill-progress">
+                        <div class="skill-progress-bar"></div>
+                    </div>
+                    <a href="#" class="card-button" onclick="openPopup()">Launch App</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-inner">
+                <div class="card-info-overlay">
+                    Premium Features Unlocked
+                </div>
+                <img src="https://img95.lovepik.com/photo/40105/1581.gif_wh860.gif" alt="Utility 1" class="card-gif">
+                <div class="premium-badge">Premium</div>
+                <div class="card-content">
+                    
+                    <h2 class="card-title">Neon Style Utility</h2>
+                    <p class="card-description">Five word description goes here</p>
+                    <div class="rating">
+                        <div class="rating-icon">
+                            ★★★★★
+                            <div class="rating-icon-fill">
+                                ★★★★★
+                            </div>
+                        </div>
+                        <span class="rating-text">(4.2)</span>
+                    </div>
+                    <div class="skill-progress">
+                        <div class="skill-progress-bar"></div>
+                    </div>
+                    <a href="#" class="card-button" onclick="openPopup()">Launch App</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-inner">
+                <div class="card-info-overlay">
+                    Premium Features Unlocked
+                </div>
+                <img src="https://img95.lovepik.com/photo/40105/1581.gif_wh860.gif" alt="Utility 1" class="card-gif">
+                <div class="premium-badge">Premium</div>
+                <div class="card-content">
                     <h2 class="card-title">Neon Style Utility</h2>
                     <p class="card-description">Five word description goes here</p>
                     <div class="rating">
