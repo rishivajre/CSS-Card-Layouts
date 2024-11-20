@@ -1,165 +1,100 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Utility Cards</title>
     <style>
-        :root {
-            /* Light Mode Colors */
-            --bg-primary: #e0e5ec;
-            --bg-secondary: #ffffff;
-            --text-primary: #2d3436;
-            --text-secondary: #636e72;
-            --shadow-light: #a3b1c6;
-            --shadow-dark: #ffffff;
-            --modal-bg: rgba(0,0,0,0.5);
-
-            /* Dark Mode Colors */
-            --dark-bg-primary: #121212;
-            --dark-bg-secondary: #1e1e1e;
-            --dark-text-primary: #e0e0e0;
-            --dark-text-secondary: #b0b0b0;
-            --dark-shadow-light: #2c2c2c;
-            --dark-shadow-dark: #000000;
-        }
-
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            transition: background-color 0.3s, color 0.3s;
         }
 
         body {
-            font-family: 'Inter', 'Arial', sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            line-height: 1.6;
+            margin: 0;
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        body.dark-mode {
-            background: var(--dark-bg-primary);
-            color: var(--dark-text-primary);
-        }
-
-        .theme-toggle {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: var(--bg-primary);
-            border: none;
-            padding: 10px 15px;
-            border-radius: 50px;
-            cursor: pointer;
-            box-shadow: 
-                5px 5px 10px var(--shadow-light),
-                -5px -5px 10px var(--shadow-dark);
-        }
-
-        body.dark-mode .theme-toggle {
-            background: var(--dark-bg-secondary);
-            box-shadow: 
-                5px 5px 10px var(--dark-shadow-light),
-                -5px -5px 10px var(--dark-shadow-dark);
-        }
-
-        .search-container {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100%;
-            max-width: 400px;
-            padding: 0 20px;
-        }
-
-        .search-input {
-            width: 100%;
-            padding: 10px 15px;
-            border-radius: 50px;
-            border: none;
-            background: var(--bg-secondary);
-            box-shadow: 
-                5px 5px 10px var(--shadow-light),
-                -5px -5px 10px var(--shadow-dark);
-        }
-
-        body.dark-mode .search-input {
-            background: var(--dark-bg-secondary);
-            color: var(--dark-text-primary);
-            box-shadow: 
-                5px 5px 10px var(--dark-shadow-light),
-                -5px -5px 10px var(--dark-shadow-dark);
+            background: #0a0a0a;
+            font-family: 'Arial', sans-serif;
+            color: white;
+            padding: 1rem;
+            line-height: 1.6;
         }
 
         .container {
-            width: 100%;
             max-width: 1400px;
+            margin: 0 auto;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
         }
 
         .card {
-            background: var(--bg-primary);
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 
-                8px 8px 15px var(--shadow-light),
-                -8px -8px 15px var(--shadow-dark);
-            transition: all 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            opacity: 1;
-             animation: fadeIn 1s ease-in-out;
-        }
-
-        body.dark-mode .card {
-            background: var(--dark-bg-secondary);
-            box-shadow: 
-                8px 8px 15px var(--dark-shadow-light),
-                -8px -8px 15px var(--dark-shadow-dark);
-        }
-
-        .card.hidden {
-            display: none;
+            position: relative;
+            border-radius: 23px;
+            background: #151515;
+            padding: 3px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
         }
 
         .card:hover {
             transform: translateY(-10px);
-            box-shadow: 
-                12px 12px 20px var(--shadow-light),
-                -12px -12px 20px var(--shadow-dark);
         }
 
-        body.dark-mode .card:hover {
-            box-shadow: 
-                12px 12px 20px var(--dark-shadow-light),
-                -12px -12px 20px var(--dark-shadow-dark);
+        .card::before,
+        .card::after {
+            content: "";
+            position: absolute;
+            inset: -0.2rem;
+            z-index: -1;
+            background: conic-gradient( from var(--gradient-angle), #ff00ea, #00f7ff, #00ff00, #00f7ff, #ff00ea);
+            border-radius: 25px;
+            animation: rotate 5s linear infinite;
+            opacity: 0;
+            transition: opacity 0.6s;
         }
 
-        .gif-container {
-            position: relative;
+        .card::after {
+            filter: blur(0.8rem);
+        }
+
+        .card:hover::before,
+        .card:hover::after {
+            opacity: 1;
+        }
+
+        @property --gradient-angle {
+            syntax: "<angle>";
+            initial-value: 0deg;
+            inherits: false;
+        }
+
+        @keyframes rotate {
+            0% {
+                --gradient-angle: 0deg;
+            }
+            100% {
+                --gradient-angle: 360deg;
+            }
+        }
+
+        .card-inner {
+            background: #151515;
+            border-radius: 18px;
             overflow: hidden;
-            border-bottom: 2px solid var(--bg-primary);
-            cursor: pointer;
-        }
-
-        body.dark-mode .gif-container {
-            border-bottom: 2px solid var(--dark-bg-secondary);
+            position: relative;
+            z-index: 1;
         }
 
         .card-gif {
             width: 100%;
-            height: 300px;
+    height: 300px;
             object-fit: cover;
-            transition: transform 0.3s ease;
+            transition: transform 0.3s;
         }
 
         .card:hover .card-gif {
@@ -167,283 +102,387 @@
         }
 
         .card-content {
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            flex-grow: 1;
-            justify-content: space-between;
+            padding: 1.5rem;
+            position: relative;
         }
 
         .card-title {
-            color: var(--text-primary);
-            font-size: 1.4rem;
-            margin-bottom: 10px;
-            font-weight: 600;
-        }
-
-        body.dark-mode .card-title {
-            color: var(--dark-text-primary);
+            font-size: 1.5rem;
+            margin: 0 0 1rem;
+            background: linear-gradient(to right, #ff00ea, #00f7ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .card-description {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            margin-bottom: 15px;
-            flex-grow: 1;
-        }
-
-        body.dark-mode .card-description {
-            color: var(--dark-text-secondary);
+            color: #888;
+            margin-bottom: 1.5rem;
         }
 
         .card-button {
-            align-self: flex-start;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 50px;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 
-                5px 5px 10px var(--shadow-light),
-                -5px -5px 10px var(--shadow-dark);
-            transition: all 0.2s ease;
-        }
-
-        body.dark-mode .card-button {
-            background: var(--dark-bg-secondary);
-            color: var(--dark-text-primary);
-            box-shadow: 
-                5px 5px 10px var(--dark-shadow-light),
-                -5px -5px 10px var(--dark-shadow-dark);
+            display: inline-block;
+            padding: 0.8rem 1.5rem;
+            background: linear-gradient(45deg, #ff00ea, #00f7ff);
+            border-radius: 25px;
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            margin-top: 25px;
         }
 
         .card-button:hover {
-            box-shadow: 
-                inset 5px 5px 10px var(--shadow-light),
-                inset -5px -5px 10px var(--shadow-dark);
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(255, 0, 234, 0.5);
         }
 
-        body.dark-mode .card-button:hover {
-            box-shadow: 
-                inset 5px 5px 10px var(--dark-shadow-light),
-                inset -5px -5px 10px var(--dark-shadow-dark);
-        }
-
-        /* Modal Styles */
-        .modal {
-            position: fixed;
+        .card-button::before {
+            content: '';
+            position: absolute;
             top: 0;
-            left: 0;
+            left: -100%;
             width: 100%;
             height: 100%;
-            background: var(--modal-bg);
+            background: linear-gradient( 120deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: all 0.6s;
+        }
+
+        .card-button:hover::before {
+            left: 100%;
+        }
+
+        /* Popup Styles */
+
+        .popup {
             display: none;
-            justify-content: center;
-            align-items: center;
+            position: fixed;
             z-index: 1000;
-        }
-
-        .modal-content {
-            background: var(--bg-secondary);
-            border-radius: 20px;
-            max-width: 80%;
-            max-height: 80%;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
             overflow: auto;
-            box-shadow: 
-                12px 12px 20px var(--shadow-light),
-                -12px -12px 20px var(--shadow-dark);
+            background-color: rgba(0, 0, 0, 0.9);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .popup-content {
+            background: linear-gradient(45deg, #151515, #1f1f1f);
+            border: 3px solid transparent;
+            border-image: linear-gradient(45deg, #ff00ea, #00f7ff) 1;
+            border-radius: 20px;
+            max-width: 500px;
+            width: 90%;
+            padding: 2rem;
             position: relative;
-            padding: 30px;
+            text-align: center;
+            transform: scale(0.7);
+            opacity: 0;
+            transition: all 0.3s ease;
         }
 
-        body.dark-mode .modal-content {
-            background: var(--dark-bg-secondary);
-            color: var(--dark-text-primary);
-            box-shadow: 
-                12px 12px 20px var(--dark-shadow-light),
-                -12px -12px 20px var(--dark-shadow-dark);
+        .popup.show {
+            display: flex;
         }
 
-        .modal-close {
+        .popup.show .popup-content {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        .popup-close {
             position: absolute;
-            top: 15px;
-            right: 15px;
-            background: none;
-            border: none;
-            font-size: 1.5rem;
+            top: 10px;
+            right: 10px;
+            color: #00f7ff;
+            font-size: 2rem;
             cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .popup-close:hover {
+            color: #ff00ea;
+        }
+
+        /* Premium Features */
+
+        .premium-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: linear-gradient(45deg, #ff00ea, #00f7ff);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .card:hover .premium-badge {
+            opacity: 1;
+        }
+
+        .skill-progress {
+            width: 100%;
+            background: #222;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 10px;
+            position: relative;
+        }
+
+        .skill-progress-bar {
+            height: 5px;
+            background: linear-gradient(45deg, #ff00ea, #00f7ff);
+            width: 0;
+            animation: fillProgress 2s ease-out forwards;
+        }
+
+        @keyframes fillProgress {
+            to {
+                width: 75%;
+            }
+        }
+
+        .rating {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .rating-icon {
+            position: relative;
+            display: inline-block;
+            color: #222;
+        }
+
+        .rating-icon-fill {
+            position: absolute;
+            top: 0;
+            left: 0;
+            overflow: hidden;
+            color: #00f7ff;
+            animation: fillStars 2s ease-out forwards;
+        }
+
+        @keyframes fillStars {
+            to {
+                width: 84%;
+            }
+        }
+
+        .rating-text {
+            color: #888;
+            margin-left: 5px;
+        }
+
+        .card-info-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 5px 10px;
+            text-align: center;
+            font-size: 0.8rem;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .card:hover .card-info-overlay {
+            opacity: 1;
         }
 
         /* Responsive Adjustments */
+
         @media screen and (max-width: 768px) {
             .container {
-                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-                gap: 20px;
+                grid-template-columns: 1fr;
+                padding: 1rem;
             }
-
+            .card-content {
+                padding: 1rem;
+            }
             .card-title {
                 font-size: 1.2rem;
             }
-
-            .card-description {
-                font-size: 0.85rem;
-            }
-
-            .card-gif {
-                height: 250px;
-            }
-        }
-
-        @media screen and (max-width: 480px) {
-            .container {
-                grid-template-columns: 1fr;
-                gap: 15px;
-            }
-
-            .card-gif {
-                height: 300px;
-            }
-
-            .card-title {
-                font-size: 1.1rem;
-            }
-
-            .card-description {
-                font-size: 0.8rem;
+            .popup-content {
+                width: 95%;
+                padding: 1rem;
             }
         }
         
-        @keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
+        /* Extremely Small Screens */
+@media screen and (max-width: 320px) {
+    .container {
+        grid-template-columns: 1fr;
+        gap: 15px;
     }
-    to {
-        opacity: 1;
-        transform: translateY(0);
+    .card-title {
+        font-size: 1rem;
+    }
+    .card-description {
+        font-size: 0.8rem;
+    }
+    .card-button {
+        padding: 0.5rem 1rem;
+        font-size: 0.8rem;
     }
 }
 
+/* Small Screens */
+@media screen and (min-width: 321px) and (max-width: 576px) {
+    .container {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    .card-gif {
+        height: 250px;
+    }
+}
+
+/* Medium Screens */
+@media screen and (min-width: 577px) and (max-width: 992px) {
+    .container {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 25px;
+    }
+}
+
+/* Large Screens */
+@media screen and (min-width: 993px) {
+    .container {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 30px;
+    }
+}
     </style>
 </head>
+
 <body>
-    <button class="theme-toggle">Toggle Dark Mode</button>
-    
-    <div class="search-container">
-        <input type="text" class="search-input" placeholder="Search utilities...">
-    </div>
-
     <div class="container">
-        <div class="card" data-title="Utility One" data-description="A concise description that explains the utility's purpose and value proposition.">
-            <div class="gif-container">
+        <div class="card">
+            <div class="card-inner">
+                <div class="card-info-overlay">
+                    Premium Features Unlocked
+                </div>
                 <img src="https://img95.lovepik.com/photo/40105/1581.gif_wh860.gif" alt="Utility 1" class="card-gif">
-            </div>
-            <div class="card-content">
-                <div>
-                    <h2 class="card-title">Utility One</h2>
-                    <p class="card-description">A concise description that explains the utility's purpose and value proposition.</p>
+                <div class="card-content">
+                    <div class="premium-badge">Premium</div>
+                    <h2 class="card-title">NeonGlow UI Toolkit</h2>
+                    <p class="card-description">A dynamic, neon-inspired UI toolkit designed for building visually striking and interactive web applications.</p>
+                    <div class="rating">
+                        <div class="rating-icon">
+                            ★★★★★
+                            <div class="rating-icon-fill">
+                                ★★★★★
+                            </div>
+                        </div>
+                        <span class="rating-text">(4.2)</span>
+                    </div>
+                    <div class="skill-progress">
+                        <div class="skill-progress-bar"></div>
+                    </div>
+                    <a href="#" class="card-button" onclick="openPopup()">Launch App</a>
                 </div>
-                <button class="card-button">Open App</button>
             </div>
         </div>
-        <div class="card" data-title="Utility Two" data-description="Another brief explanation highlighting the unique features of this utility.">
-            <div class="gif-container">
-                <img src="https://i.pinimg.com/originals/91/90/8a/91908ad2f9aef293ed840739a291e9db.gif" alt="Utility 2" class="card-gif">
-            </div>
-            <div class="card-content">
-                <div>
-                    <h2 class="card-title">Utility Two</h2>
-                    <p class="card-description">Another brief explanation highlighting the unique features of this utility.</p>
+
+        <div class="card">
+            <div class="card-inner">
+                <div class="card-info-overlay">
+                    Premium Features Unlocked
                 </div>
-                <button class="card-button">Open App</button>
+                <img src="https://i.pinimg.com/originals/91/90/8a/91908ad2f9aef293ed840739a291e9db.gif" alt="Utility 1" class="card-gif">
+                <div class="card-content">
+                    <div class="premium-badge">Premium</div>
+                    <h2 class="card-title">NeonGlow UI Toolkit</h2>
+                    <p class="card-description">A dynamic, neon-inspired UI toolkit designed for building visually striking and interactive web applications.</p>
+                    <div class="rating">
+                        <div class="rating-icon">
+                            ★★★★★
+                            <div class="rating-icon-fill">
+                                ★★★★★
+                            </div>
+                        </div>
+                        <span class="rating-text">(4.2)</span>
+                    </div>
+                    <div class="skill-progress">
+                        <div class="skill-progress-bar"></div>
+                    </div>
+                    <a href="#" class="card-button" onclick="openPopup()">Launch App</a>
+                </div>
             </div>
         </div>
-        <div class="card" data-title="Utility Three" data-description="A short description demonstrating the utility's key benefits and functionality.">
-            <div class="gif-container">
-                <img src="https://img95.lovepik.com/photo/40105/1581.gif_wh860.gif" alt="Utility 3" class="card-gif">
-            </div>
-            <div class="card-content">
-                <div>
-                    <h2 class="card-title">Utility Three</h2>
-                    <p class="card-description">A short description demonstrating the utility's key benefits and functionality.</p>
+
+        <div class="card">
+            <div class="card-inner">
+                <div class="card-info-overlay">
+                    Premium Features Unlocked
                 </div>
-                <button class="card-button">Open App</button>
+                <img src="https://img95.lovepik.com/photo/40105/1581.gif_wh860.gif" alt="Utility 1" class="card-gif">
+                <div class="card-content">
+                    <div class="premium-badge">Premium</div>
+                    <h2 class="card-title">NeonGlow UI Toolkit</h2>
+                    <p class="card-description">A dynamic, neon-inspired UI toolkit designed for building visually striking and interactive web applications.</p>
+                    <div class="rating">
+                        <div class="rating-icon">
+                            ★★★★★
+                            <div class="rating-icon-fill">
+                                ★★★★★
+                            </div>
+                        </div>
+                        <span class="rating-text">(4.2)</span>
+                    </div>
+                    <div class="skill-progress">
+                        <div class="skill-progress-bar"></div>
+                    </div>
+                    <a href="#" class="card-button" onclick="openPopup()">Launch App</a>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="modal">
-        <div class="modal-content">
-            <button class="modal-close">&times;</button>
-            <h2 class="modal-title"></h2>
-            <p class="modal-description"></p>
-            <p class="modal-details">More details about the utility would go here...</p>
+    <!-- Popup -->
+    <div id="appPopup" class="popup">
+        <div class="popup-content">
+            <span class="popup-close" onclick="closePopup()">&times;</span>
+            <h2 style="background: linear-gradient(to right, #ff00ea, #00f7ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">App Details</h2>
+            <p style="color: #888; margin: 1rem 0;">Detailed information about the app goes here. Premium features, functionality, and key highlights.</p>
+            <a href="#" style="
+                display: inline-block;
+                padding: 0.8rem 1.5rem;
+                background: linear-gradient(45deg, #ff00ea, #00f7ff);
+                border-radius: 25px;
+                color: white;
+                text-decoration: none;
+                margin-top: 1rem;
+            ">Get Started</a>
         </div>
     </div>
 
     <script>
-        // Dark Mode Toggle
-        const themeToggle = document.querySelector('.theme-toggle');
-        const body = document.body;
+        function openPopup() {
+            document.getElementById('appPopup').classList.add('show');
+        }
 
-        themeToggle.addEventListener('click', () => {
-            body.classList.toggle('dark-mode');
-            themeToggle.textContent = body.classList.contains('dark-mode') 
-                ? 'Light Mode' 
-                : 'Dark Mode';
-        });
+        function closePopup() {
+            document.getElementById('appPopup').classList.remove('show');
+        }
 
-        // Search Functionality
-        const searchInput = document.querySelector('.search-input');
-        const cards = document.querySelectorAll('.card');
-
-        searchInput.addEventListener('input', (e) => {
-            const searchTerm = e.target.value.toLowerCase();
-            
-            cards.forEach(card => {
-                const title = card.dataset.title.toLowerCase();
-                const description = card.dataset.description.toLowerCase();
-                
-                if (title.includes(searchTerm) || description.includes(searchTerm)) {
-                    card.classList.remove('hidden');
-                } else {
-                    card.classList.add('hidden');
-                }
-            });
-        });
-
-        // Modal Functionality
-        const modal = document.querySelector('.modal');
-        const modalClose = document.querySelector('.modal-close');
-        const modalTitle = document.querySelector('.modal-title');
-        const modalDescription = document.querySelector('.modal-description');
-        const gifContainers = document.querySelectorAll('.gif-container');
-
-        gifContainers.forEach(container => {
-            container.addEventListener('click', () => {
-                const card = container.closest('.card');
-                const title = card.querySelector('.card-title').textContent;
-                const description = card.querySelector('.card-description').textContent;
-
-                modalTitle.textContent = title;
-                modalDescription.textContent = description;
-                
-                modal.style.display = 'flex';
-            });
-        });
-
-        modalClose.addEventListener('click', () => {
-            modal.style.display = 'none';
-        });
-
-        // Close modal when clicking outside
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) {
-                modal.style.display = 'none';
+        // Close popup when clicking outside the content
+        window.onclick = function(event) {
+            const popup = document.getElementById('appPopup');
+            if (event.target == popup) {
+                closePopup();
             }
-        });
+        }
     </script>
 </body>
+
 </html>
